@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 
+import { motion } from "framer-motion";
+
 interface Ripple {
     id: number,
     x: number,
@@ -22,7 +24,7 @@ export default function RippleButton({children, className, onClick, active} : Ri
         const button = event.currentTarget;
         const rect = button.getBoundingClientRect();
 
-        const size = Math.max(rect.width, rect.height);
+        const size = Math.min(rect.width, rect.height);
         const x = event.clientX - rect.left - size / 2;
         const y = event.clientY - rect.top - size / 2;
 
@@ -31,9 +33,9 @@ export default function RippleButton({children, className, onClick, active} : Ri
 
         setTimeout(() => {
             setRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
-        }, 600);
+        }, 900);
 
-        if(onClick) onClick();
+        onClick?.();
     };
 
     return (
@@ -41,16 +43,25 @@ export default function RippleButton({children, className, onClick, active} : Ri
             relative overflow-hidden select-none ${className}
         `} onClick={createRipple} >
             {ripples.map((ripple) => (
-                <span key={ripple.id} className={`
-                    absolute bg-white/40 rounded-full animate-ripple
+                <motion.span key={ripple.id} className={`
+                    absolute bg-white/40 rounded-full
                 `} style={{
-                    left: ripple.x,
-                    top: ripple.y,
+                    left: ripple.x - 10,
+                    top: ripple.y - 10,
                     width: ripple.size,
                     height: ripple.size,
+                }}
+                initial={{
+                    scale: 0, opacity: 0.5,
+                }}
+                animate={{
+                    scale: 10, opacity: 0,
+                }}
+                transition={{
+                    duration: 0.9, ease: "easeOut",
                 }}>
 
-                </span>
+                </motion.span>
             ))}
             {children}
         </button>
