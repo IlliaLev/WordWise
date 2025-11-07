@@ -25,8 +25,8 @@ export default function Navbar() {
         border-b border-b-[#3D3D3D]
     `}>
         <div className={`
-          w-18 h-18 p-1
-          bg-logo bg-no-repeat
+          w-15 h-15 p-1
+          bg-logo 
           ml-2
           `}></div>
         <div className={`

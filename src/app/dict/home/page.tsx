@@ -5,16 +5,11 @@ export default function HomePage() {
         <div className={`
             
         `}>
-            <button className={`
-                text-2xl font-semibold
-                `}>Click me</button>
             <div className={`
                 w-64 h-64 ml-20
                 rounded-br-2xl rounded-tl-2xl rounded-tr-xl rounded-bl-xl
                 bg-white/50
-                backdrop-blur-sm 
-                
-                hover:blur-none
+                backdrop-blur-sm
                 transition duration-700
                 `}>
 
