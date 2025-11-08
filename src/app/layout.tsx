@@ -1,5 +1,6 @@
 
 import "./globals.css";
+import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
 
 export default function RootLayout({
   children,
@@ -9,6 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en" >
       <body>
+          <ScrollToTopButton></ScrollToTopButton>
           {children}
       </body>
     </html>

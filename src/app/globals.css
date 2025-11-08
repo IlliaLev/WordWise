@@ -2,6 +2,7 @@
 
 @tailwind utilities;
 
+
 .bg-triangles {
     background-image: url("/bg.svg");
     background-position: center;
@@ -13,4 +14,28 @@
     background-image: url("/logo.svg");
     background-position: center;
     background-size: cover;
+}
+
+.scrollbar-hide {
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+@layer utilities {
+    
+    html, body {
+        cursor: url("/cursors/mouse-pointer-2.svg") 4 4, auto !important;
+    }
+    .scroll-to-top-btn, .active-button, a, [role="button"] {
+        cursor: url("/cursors/pointer.svg") 4 4, auto !important;
+    }
+    input {
+        cursor: url("/cursors/text-cursor.svg") 4 4, auto !important;
+    }
+    .banned-button {
+        cursor: url("/cursors/ban.svg") 4 4, auto !important;
+    }
 }

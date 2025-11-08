@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {motion, AnimatePresence} from "framer-motion";
+import { useApp } from "@/store/useAppStore";
 
 const links = [
   {href: "/dict/home", label: "Home"},
@@ -13,7 +14,18 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [clickedIndex, setClickedIndex] = useState<number>(0);
+  const {selectedPage, setSelectedPage} = useApp();
+
+  useEffect(() => {
+    const idx = links.findIndex(link => link.href === pathname);
+    if(idx !== -1) {
+      setSelectedPage(idx);
+    }
+  }, [pathname, setSelectedPage]);
+
+  const handleClickedIndex = (i: number) => {
+    setSelectedPage(i);
+  }
 
   return (
     <nav className={`
@@ -38,16 +50,17 @@ export default function Navbar() {
           {links.map((link, i) => (
             <div key={link.href} 
               className={`
+                
                 relative group
                 hover:bg-white/40
                 rounded-lg
                 py-1 px-1 
                 transition duration-300
                 `}
-              onClick={() => setClickedIndex(i)} 
+              onClick={() => handleClickedIndex(i)} 
               >
                 
-                  {clickedIndex === i && (
+                  {selectedPage === i && (
                     <motion.span 
                       layoutId="hoverBackground"
                       className="absolute left-0 mt-3 inset-y-full rounded-md bg-white w-full h-0.5"
@@ -65,7 +78,7 @@ export default function Navbar() {
 
                 <Link href={link.href} className={`
                     relative
-                    ${clickedIndex === i ? "text-white" : "text-[#858585]"}
+                    ${selectedPage === i ? "text-white" : "text-[#858585]"}
                     group-hover:text-white
                     
                     transition-colors duration-200

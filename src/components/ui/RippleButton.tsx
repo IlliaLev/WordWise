@@ -44,7 +44,7 @@ export default function RippleButton({children, className, onClick, active} : Ri
         `} onClick={createRipple} >
             {ripples.map((ripple) => (
                 <motion.span key={ripple.id} className={`
-                    absolute bg-white/40 rounded-full
+                    absolute bg-[#1FFF9E]/40 rounded-full
                 `} style={{
                     left: ripple.x - 10,
                     top: ripple.y - 10,
