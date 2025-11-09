@@ -18,7 +18,7 @@ export default function FlipCard({front, back, bgClassName, className, bg} : Fli
   return (
       <div
         className={`
-            relative ${bgClassName} bg-none perspective-[1000px]
+            relative ${bgClassName} bg-none perspective-[1000px] flip-card
         `}
         onClick={() => setFlipped((prev) => !prev)}
       >

@@ -1,6 +1,7 @@
 "use client";
 
 import {create} from "zustand";
+import { persist } from "zustand/middleware";
 
 export type Word = {
     original: string,
@@ -14,9 +15,14 @@ interface AppState {
     setSelectedPage: (page: number) => void,
 }
 
-export const useApp = create<AppState>((set) => ({
-    words: [],
-    addWord: (word: Word) => set((state) => ({words: [...state.words, word]})),
-    selectedPage: 0,
-    setSelectedPage: (page: number) => set(() => ({selectedPage: page})),
-}));
+export const useApp = create<AppState>()(persist(
+    (set) => ({
+        words: [],
+        addWord: (word: Word) => set((state) => ({words: [...state.words, word]})),
+        selectedPage: 0,
+        setSelectedPage: (page: number) => set(() => ({selectedPage: page})),
+    }),
+    {
+        name: "app-storage",
+    }
+));

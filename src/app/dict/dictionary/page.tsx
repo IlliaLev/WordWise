@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/store/useAppStore";
 import type { Word } from "@/store/useAppStore";
@@ -21,6 +21,8 @@ export default function DictionaryPage() {
     const [ishowed1, setIshowed1] = useState<boolean>(false);
     const [ishowed2, setIshowed2] = useState<boolean>(false);
 
+    const [randomWord, setRandomWord] = useState<Word>({original: "Please add words...", translation: "Please add words..."});
+
     const handleAddWord = () => {
         const word: Word = {original: input_1, translation: input_2};
         addWord(word);
@@ -29,6 +31,20 @@ export default function DictionaryPage() {
         setIshowed1(false);
         setIshowed2(false);
     }
+
+    const getRandomWord = () => {
+        if(words.length > 0) {
+            const idx = Math.floor(Math.random() * words.length);
+            return words[idx];
+        } else {
+            const word: Word = {original: "Please add words...", translation: "Please add words..."};
+            return word;    
+        }
+    }
+
+    useEffect(() => {
+        setRandomWord(getRandomWord());
+    }, [words]);
 
     return (
         <div className={`
@@ -190,7 +206,7 @@ export default function DictionaryPage() {
                             rounded-[40px_15px_40px_15px]
                             backdrop-blur-sm
                         `}>
-                                <FlipCard front="front" back="back" bgClassName=" w-[90%] h-[90%]" className={`
+                                <FlipCard front={randomWord.original} back={randomWord.translation} bgClassName=" w-[90%] h-[90%]" className={`
                                     bg-white/30
                                     rounded-[40px_15px_40px_15px]
                                     text-3xl
