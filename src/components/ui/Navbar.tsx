@@ -9,7 +9,8 @@ import { useApp } from "@/store/useAppStore";
 const links = [
   {href: "/dict/home", label: "Home"},
   {href: "/dict/dictionary", label: "Dictionary"},
-  {href: "/dict/about", label: "About"}
+  {href: "/dict/cards", label: "Cards"},
+  {href: "/dict/about", label: "About"},
 ];
 
 export default function Navbar() {

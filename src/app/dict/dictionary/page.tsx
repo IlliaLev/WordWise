@@ -8,12 +8,13 @@ import type { Word } from "@/store/useAppStore";
 import RippleButton from "@/components/ui/RippleButton";
 import ListItem from "@/components/ui/ListItem";
 import FlipCard from "@/components/ui/FlipCard";
+import ModalWindow from "@/components/ui/ModalWindow";
 
 //! style items in list, add motion.ul?, create search like search all word, only among original and only among translation 
 //! (maybe make like 2 checkboxes that acts like filters)
 
 export default function DictionaryPage() {
-    const {words, addWord} = useApp();
+    const {words, addWord, removeWord, updateWord} = useApp();
 
     const [input_1, setInput1] = useState<string>("");
     const [input_2, setInput2] = useState<string>("");
@@ -22,6 +23,22 @@ export default function DictionaryPage() {
     const [ishowed2, setIshowed2] = useState<boolean>(false);
 
     const [randomWord, setRandomWord] = useState<Word>({original: "Please add words...", translation: "Please add words..."});
+    
+    const [editingWord, setEditingWord] = useState<Word | null>(null);
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+    const handleEdit = (word: Word, index: number) => {
+        setEditingWord({ ...word});
+        setEditingIndex(index);
+    }
+
+    const handleSave = (updated: Word) => {
+        if(editingIndex !== null) {
+            updateWord(editingIndex, updated);
+        }
+        setEditingWord(null);
+        setEditingIndex(null);
+    }
 
     const handleAddWord = () => {
         const word: Word = {original: input_1, translation: input_2};
@@ -85,7 +102,7 @@ export default function DictionaryPage() {
                                         text-2xl
                                     
                                     `}>
-                                        <ListItem word={word}></ListItem>
+                                        <ListItem index={idx} word={word} onDelete={() => removeWord(word)} onEdit={() => handleEdit(word, idx)}></ListItem>
                                     </li>
                                 ))}
                             </ul>
@@ -218,6 +235,9 @@ export default function DictionaryPage() {
                         </div>
                 </div> 
             </div>
+            <ModalWindow word={editingWord} onClose={() => setEditingWord(null)} onSave={handleSave}>
+
+            </ModalWindow>
         </div>
     );
 }
