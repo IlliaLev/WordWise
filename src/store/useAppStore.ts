@@ -6,6 +6,7 @@ import { persist } from "zustand/middleware";
 export type Word = {
     original: string,
     translation: string,
+    id: number,
 }
 
 interface AppState {
@@ -22,7 +23,7 @@ export const useApp = create<AppState>()(persist(
         words: [],
         addWord: (word: Word) => set((state) => ({words: [...state.words, word]})),
         removeWord: (word: Word) => set((state) => ({words: state.words.filter(cur => !(
-            cur.original === word.original && cur.translation === word.translation
+            cur.id === word.id
         ))})),
         updateWord: (index: number, word: Word) => set((state) => {
             const newWords = [...state.words];

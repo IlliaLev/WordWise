@@ -11,7 +11,7 @@ import FlipCard from "@/components/ui/FlipCard";
 import ModalWindow from "@/components/ui/ModalWindow";
 
 //! style items in list, add motion.ul?, create search like search all word, only among original and only among translation 
-//! (maybe make like 2 checkboxes that acts like filters)
+//! (maybe make like 2 checkboxes that acts like filters, alphabetical sort)
 
 export default function DictionaryPage() {
     const {words, addWord, removeWord, updateWord} = useApp();
@@ -22,7 +22,7 @@ export default function DictionaryPage() {
     const [ishowed1, setIshowed1] = useState<boolean>(false);
     const [ishowed2, setIshowed2] = useState<boolean>(false);
 
-    const [randomWord, setRandomWord] = useState<Word>({original: "Please add words...", translation: "Please add words..."});
+    const [randomWord, setRandomWord] = useState<Word>({original: "Please add words...", translation: "Please add words...", id: -1});
     
     const [editingWord, setEditingWord] = useState<Word | null>(null);
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -41,7 +41,7 @@ export default function DictionaryPage() {
     }
 
     const handleAddWord = () => {
-        const word: Word = {original: input_1, translation: input_2};
+        const word: Word = {original: input_1, translation: input_2, id: Date.now()};
         addWord(word);
         setInput1("");
         setInput2("");
@@ -54,7 +54,7 @@ export default function DictionaryPage() {
             const idx = Math.floor(Math.random() * words.length);
             return words[idx];
         } else {
-            const word: Word = {original: "Please add words...", translation: "Please add words..."};
+            const word: Word = {original: "Please add words...", translation: "Please add words...", id: -1};
             return word;    
         }
     }

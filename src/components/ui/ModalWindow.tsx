@@ -13,7 +13,7 @@ interface ModalWindowProps {
 }
 
 export default function ModalWindow({word, onClose, onSave} : ModalWindowProps) {
-    const [editedWord, setEditedWord] = useState<Word>({original: "", translation: ""});
+    const [editedWord, setEditedWord] = useState<Word>({original: "", translation: "", id: Date.now()});
 
     const [ishowed1, setIshowed1] = useState<boolean>(true);
     const [ishowed2, setIshowed2] = useState<boolean>(true);
