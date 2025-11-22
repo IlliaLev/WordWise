@@ -10,7 +10,7 @@ export default function DictLayout({children} : DictLayoutProps) {
     return (
         <div className={`
             min-h-screen flex flex-col
-            bg-[#141414] bg-triangles
+            bg-[#141414] bg-triangles overflow-hidden
         `}>
             <Navbar></Navbar>
             <main className="flex-1">{children}</main>

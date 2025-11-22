@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/store/useAppStore";
 import type { Word } from "@/store/useAppStore";
+import { Search } from "lucide-react";
 
 import RippleButton from "@/components/ui/RippleButton";
 import ListItem from "@/components/ui/ListItem";
 import FlipCard from "@/components/ui/FlipCard";
 import ModalWindow from "@/components/ui/ModalWindow";
+import Checkbox from "@/components/ui/Checkbox";
 
 //! style items in list, add motion.ul?, create search like search all word, only among original and only among translation 
 //! (maybe make like 2 checkboxes that acts like filters, alphabetical sort)
@@ -21,11 +23,17 @@ export default function DictionaryPage() {
 
     const [ishowed1, setIshowed1] = useState<boolean>(false);
     const [ishowed2, setIshowed2] = useState<boolean>(false);
+    const [ishowed3, setIshowed3] = useState<boolean>(false);
 
     const [randomWord, setRandomWord] = useState<Word>({original: "Please add words...", translation: "Please add words...", id: -1});
     
     const [editingWord, setEditingWord] = useState<Word | null>(null);
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+    const [searchWord, setSearchWord] = useState<string>("");
+
+    const [onlyOriginal, setOnlyOriginal] = useState<boolean>(true);
+    const [onlyTranslation, setOnlyTranslation] = useState<boolean>(false);
 
     const handleEdit = (word: Word, index: number) => {
         setEditingWord({ ...word});
@@ -49,6 +57,26 @@ export default function DictionaryPage() {
         setIshowed2(false);
     }
 
+    const handleSearch = (inputSearchWord: string) => {
+        setSearchWord(inputSearchWord);
+    }
+
+    const handleOnlyOriginal = () => {
+        if(onlyOriginal && !onlyTranslation) {
+            setOnlyOriginal(true);
+        } else {
+            setOnlyOriginal(!onlyOriginal);
+        }
+    }
+
+    const handleOnlyTranslation = () => {
+        if(onlyTranslation && !onlyOriginal) {
+            setOnlyTranslation(true);
+        } else {
+            setOnlyTranslation(!onlyTranslation);
+        }
+    }
+
     const getRandomWord = () => {
         if(words.length > 0) {
             const idx = Math.floor(Math.random() * words.length);
@@ -62,6 +90,22 @@ export default function DictionaryPage() {
     useEffect(() => {
         setRandomWord(getRandomWord());
     }, [words]);
+
+    const filteredWords = useMemo(() => {
+        if(onlyOriginal && !onlyTranslation) {
+            return words.filter((w) => 
+                w.original.toLowerCase().includes(searchWord.toLowerCase())
+            );
+        } else if(!onlyOriginal && onlyTranslation) {
+            return words.filter((w) => 
+                w.translation.toLowerCase().includes(searchWord.toLowerCase())
+            );
+        }
+        return words.filter((w) => 
+            w.original.toLowerCase().includes(searchWord.toLowerCase()) ||
+            w.translation.toLowerCase().includes(searchWord.toLowerCase())
+        )
+    }, [searchWord, words, onlyOriginal, onlyTranslation]);
 
     return (
         <div className={`
@@ -81,10 +125,66 @@ export default function DictionaryPage() {
                     backdrop-blur-sm
                     `}>
                         <div className={`
-                            m-10
-                            w-[90%] h-full 
+                            mt-10 ml-10 mr-10
+                            w-[90%] h-20
                             bg-white/30
-                            rounded-[40px_15px_40px_15px]
+                            overflow-hidden
+                            rounded-[40px_15px_0_0]
+                            border-b-2 border-b-white
+                        `}>
+                            <div className={`
+                                mt-4 mb-4 mx-1.5
+                                flex flex-row items-center gap-6 justify-between
+                            `}>
+                                <div className={`
+                                    flex flex-row items-center
+                                `}>
+                                    <Search className={`
+                                          
+                                    `}></Search>
+                                    <div className={`
+                                        flex flex-col items-center justify-center  
+                                    `}>
+                                        <input type="text" placeholder="Find word" onFocus={() => setIshowed3(true)} onBlur={() => setIshowed3(searchWord.trim() !== "" ? true : false)} value={searchWord} onChange={(e) => handleSearch(e.target.value)} className={`
+                                            outline-none text-2xl
+                                            ml-3
+                                            border-l-2 border-l-white px-3
+                                        `}/>
+                                        <AnimatePresence>
+                                            <motion.span className={`
+                                                bg-white
+                                                w-full h-0.5  
+                                                rounded-full
+                                                ml-6
+                                            `} initial={{
+                                                scaleX: 0,
+                                            }} animate={{
+                                                scaleX: ishowed3 ? 1 : 0,
+                                            }} exit={{
+                                                scaleX: 0,
+                                            }} transition={{
+                                                duration: 0.4,
+                                                ease: "easeInOut",
+                                            }}>
+
+                                            </motion.span>
+                                        </AnimatePresence>
+                                    </div>
+                                </div>
+                                <div className={`
+                                    flex flex-row gap-3
+                                    text-xl font-semibold
+                                `}>
+                                    <Checkbox checked={onlyOriginal} onChange={handleOnlyOriginal} label="Originals"></Checkbox>
+                                    <Checkbox checked={onlyTranslation} onChange={handleOnlyTranslation} label="Translations"></Checkbox>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={`
+                            mb-10
+                            w-[90%] h-full
+                            bg-white/30
+                            rounded-[0_0_40px_15px]
                             p-6
                             overflow-hidden
                             `}>
@@ -94,7 +194,7 @@ export default function DictionaryPage() {
                                 scrollbar-hide
                                 space-y-2
                                 `}>
-                                {words.map((word: Word, idx) => (
+                                {(searchWord.trim() === "" ? words : filteredWords).map((word: Word, idx) => (
                                     <li key={idx} className={`
                                         flex items-center justify-center
                                         w-full h-5
@@ -133,7 +233,7 @@ export default function DictionaryPage() {
                                         hover:bg-white/30
                                         focus:bg-white/30
                                         transition duration-300
-                                        `} placeholder="Enter original word..." type="text" value={input_1.trim()} onBlur={() => setIshowed1(input_1.trim() !== "" ? true : false)} onFocus={() => setIshowed1(true)} onChange={(e) => setInput1(e.target.value.trim())}/>
+                                        `} placeholder="Enter original word..." type="text" value={input_1} onBlur={() => setIshowed1(input_1.trim() !== "" ? true : false)} onFocus={() => setIshowed1(true)} onChange={(e) => setInput1(e.target.value)}/>
                                     <AnimatePresence>
                                         <motion.span className={`
                                             w-[80%] h-0.5
@@ -173,7 +273,7 @@ export default function DictionaryPage() {
                                         hover:bg-white/30 
                                         focus:bg-white/30
                                         transition duration-300
-                                        `} placeholder="Enter translation..." type="text" value={input_2.trim()} onBlur={() => setIshowed2(input_2.trim() !== "" ? true : false)} onFocus={() => setIshowed2(true)} onChange={(e) => setInput2(e.target.value.trim())}/>
+                                        `} placeholder="Enter translation..." type="text" value={input_2} onBlur={() => setIshowed2(input_2.trim() !== "" ? true : false)} onFocus={() => setIshowed2(true)} onChange={(e) => setInput2(e.target.value)}/>
                                     <AnimatePresence>
                                         <motion.span className={`
                                             w-[80%] h-0.5
