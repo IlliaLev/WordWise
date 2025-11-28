@@ -38,4 +38,7 @@
     .banned-button {
         cursor: url("/cursors/ban.svg") 4 4, auto !important;
     }
+    .carousel {
+        cursor: url("/cursors/hand-grab.svg") 4 4, auto !important;
+    }
 }

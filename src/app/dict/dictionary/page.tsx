@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/store/useAppStore";
 import type { Word } from "@/store/useAppStore";
 import { Search } from "lucide-react";
+import useWindowSize from "@/hooks/useWindowSize";
 
 import RippleButton from "@/components/ui/RippleButton";
 import ListItem from "@/components/ui/ListItem";
@@ -12,11 +13,10 @@ import FlipCard from "@/components/ui/FlipCard";
 import ModalWindow from "@/components/ui/ModalWindow";
 import Checkbox from "@/components/ui/Checkbox";
 
-//! style items in list, add motion.ul?, create search like search all word, only among original and only among translation 
-//! (maybe make like 2 checkboxes that acts like filters, alphabetical sort)
-
 export default function DictionaryPage() {
     const {words, addWord, removeWord, updateWord} = useApp();
+
+    const {width, height} = useWindowSize();
 
     const [input_1, setInput1] = useState<string>("");
     const [input_2, setInput2] = useState<string>("");
@@ -112,42 +112,62 @@ export default function DictionaryPage() {
         flex flex-col
         `}>
             <div className={`
-                flex flex-row
-                ml-20 mt-20 mr-20 mb-20
+                flex md:flex-row flex-col gap-3
+                mt-20 mb-20
+                md:ml-7 md:mr-7
+                lg:ml-20 lg:mr-20
+                ml-5 mr-5
                 justify-between
                 `}>
                 <div className={`
                     flex flex-col items-center justify-center
                     bg-white/50 
-                    w-[60%] min-h-200
+                    w-full
+                    md:w-[60%] md:min-h-200 
                     min-w-60
                     rounded-[40px_15px_40px_15px]
                     backdrop-blur-sm
                     `}>
                         <div className={`
                             mt-10 ml-10 mr-10
-                            w-[90%] h-20
+                            w-[90%] 
+                            ${width >= 1340 ? "h-20" : "h-25 md:h-30"}
                             bg-white/30
                             overflow-hidden
                             rounded-[40px_15px_0_0]
                             border-b-2 border-b-white
                         `}>
                             <div className={`
-                                mt-4 mb-4 mx-1.5
-                                flex flex-row items-center gap-6 justify-between
+                                mt-4 mx-1.5
+                                flex 
+                                
+                                ${width >= 1340 ? `
+                                        flex-row items-center gap-6 justify-between mb-4
+                                    ` : `
+                                        flex-col justify-center gap-2
+                                    `}
+                                
                             `}>
                                 <div className={`
-                                    flex flex-row items-center
+                                    flex 
+                                    flex-row items-center gap-3
+                                    
                                 `}>
                                     <Search className={`
-                                          
-                                    `}></Search>
+                                        ml-3 md:ml-0
+                                        
+                                        
+                                    `} size={width <= 768 ? 35 : 25}/>
                                     <div className={`
-                                        flex flex-col items-center justify-center  
+                                        flex flex-col items-center justify-center 
+                                        mr-5 md:mr-0
                                     `}>
+                                        
                                         <input type="text" placeholder="Find word" onFocus={() => setIshowed3(true)} onBlur={() => setIshowed3(searchWord.trim() !== "" ? true : false)} value={searchWord} onChange={(e) => handleSearch(e.target.value)} className={`
                                             outline-none text-2xl
-                                            ml-3
+                                            w-full md:w-auto
+                                            
+                                            
                                             border-l-2 border-l-white px-3
                                         `}/>
                                         <AnimatePresence>
@@ -172,8 +192,9 @@ export default function DictionaryPage() {
                                     </div>
                                 </div>
                                 <div className={`
-                                    flex flex-row gap-3
+                                    flex flex-row gap-3 
                                     text-xl font-semibold
+                                    
                                 `}>
                                     <Checkbox checked={onlyOriginal} onChange={handleOnlyOriginal} label="Originals"></Checkbox>
                                     <Checkbox checked={onlyTranslation} onChange={handleOnlyTranslation} label="Translations"></Checkbox>
@@ -209,9 +230,11 @@ export default function DictionaryPage() {
                         </div>
                 </div>
                 <div className={`
-                    flex flex-col justify-between
-                    w-[40%] h-200
-                    max-w-83
+                    flex flex-col justify-between 
+                    mt-20 md:mt-0
+                    w-full items-center 
+                    md:w-[40%] h-200
+                    md:max-w-83
                     `}>
                         <div className={`
                             flex flex-col justify-between
@@ -318,7 +341,8 @@ export default function DictionaryPage() {
                         </div>
                         <div className={`
                             flex items-center justify-center
-                            w-full h-80
+                            md:w-full
+                            w-80 h-80
                             bg-white/50
                             rounded-[40px_15px_40px_15px]
                             backdrop-blur-sm

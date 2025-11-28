@@ -7,68 +7,72 @@ import FlipCard from "./FlipCard";
 
 export default function WordCarousel() {
     const {words} = useApp();
-    const [index, setIndex] = useState(0);
+    const [idx, setIdx] = useState(0);
 
-    const visibleWords = useMemo(() => {
-        if(words.length === 0) return [];
+    const nextIdx = () => {
+        if(idx === words.length - 1) {
+            setIdx(0);
+            return;
+        }
+        setIdx(idx + 1);
+    }
 
-        const total = words.length;
-        const prev = (index - 1 + total) % total;
-        const next = (index + 1) % total;
-        
-        return [words[prev], words[index], words[next]];
-    }, [index, words]);
-
-    if(words.length === 0) {
-        return (
-            <div>No words yet...</div>
-        );
+    const prevIdx = () => {
+        if(idx === 0) {
+            setIdx(words.length - 1);
+            return;
+        }
+        setIdx(idx - 1);
     }
 
     return (
         <div className={`
-            
+            flex items-center justify-center gap-3
+            w-[85%] h-[85%]
+            overflow-hidden
+            bg-white/50
+            rounded-[40px_15px_40px_15px]
+            backdrop-blur-sm
+            p-5
         `}>
-            <button onClick={() => setIndex((i) => (i - 1 + words.length) % words.length)}>
-                show prev
-            </button>
-            <div className={`
-                relative  items-center justify-center w-full
-            `}>
-                <AnimatePresence mode="popLayout">
-                    {visibleWords.map((word, idx) => {
-                        const isCenter = idx === 1;
-                        const offset = (idx - 1) * 220;
+            <button className={`
+                bg-black 
+                aspect-square
+                min-w-8 w-full max-w-16
+                rounded-full
+                
+            `} onClick={prevIdx}>-</button>
+            <AnimatePresence initial={false}>
+                <motion.div className={`
+                     min-h-[80%]
+                     h-[80%]
+                    aspect-square
+                `} initial={{
+                    x: 0,
+                    opacity: 0,
+                }} animate={{
+                    x: 0,
+                    opacity: 1,
+                }} exit={{
+                    x: -200,
+                    opacity: 0,
+                }} key={idx}>
+                    <FlipCard front={words[idx].original} back={words[idx].translation} bgClassName="w-full h-full" className={`
+                        bg-white/30
+                        text-2xl
+                        font-semibold
+                        rounded-[40px_15px_40px_15px]
+                    `}></FlipCard>
+                </motion.div>
+            </AnimatePresence>
 
-                        return (
-                            <motion.div key={word.original + idx} 
-                                initial={{ 
-                                    x: offset,
-                                }}
-                                animate={{     
-                                    x: offset,
-                                }} 
-                                transition={{
-                                    duration: 0.4,
-                                }} className={`
-                                    absolute
-                                `}>
-                                    <FlipCard front={word.original} back={word.translation} bgClassName="w-44 h-44" className={`
-                                        bg-white/30
-                                        rounded-[40px_15px_40px_15px]
-                                        text-3xl font-semibold
-                                    
-                                    `}>
-
-                                    </FlipCard>
-                            </motion.div>
-                        )
-                    })}
-                </AnimatePresence>
-            </div>
-            <button onClick={() => setIndex((i) => (i + 1) % words.length)}>
-                    show next
-            </button>
+            <button className={`
+                bg-black
+                aspect-square
+                min-w-8 w-full max-w-16
+                rounded-full
+                
+            `} onClick={nextIdx}>+</button>
         </div>
     );
 }

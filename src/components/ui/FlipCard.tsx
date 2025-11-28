@@ -41,19 +41,24 @@ export default function FlipCard({front, back, bgClassName, className, bg} : Fli
               backface-hidden
               `}
           >
-            {front}
+            <div className="px-4 text-center wrap-anywhere whitespace-normal">
+              {front}
+            </div>
           </div>
 
           <div
             className={`
               ${className}
-              absolute w-full h-full 
+              absolute w-full h-full
               flex items-center justify-center 
               backface-hidden
               transform-[rotateY(180deg)]
+              text-center wrap-break-word whitespace-normal
               `}
           >
-            {back}
+            <div className="px-4 text-center wrap-anywhere whitespace-normal">
+              {back}
+            </div>
           </div>
         </motion.div>
       </div>

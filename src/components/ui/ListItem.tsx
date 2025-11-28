@@ -22,16 +22,19 @@ export default function ListItem({word, onDelete, onEdit, index} : ListItemProps
             pb-2
             `}>
             <div className={`
-                    flex items-center justify-between gap-1
-                    w-full
+                    flex items-center justify-between gap-2
+                    w-[90%]
+                    overflow-hidden
                 `}>
                 <div className={`
-                    ml-3
+                    ml-3 w-[50%]
+                    overflow-hidden text-ellipsis whitespace-nowrap
                 `}>
                     {word.original}
                 </div>
                 <div className={`
-                    mr-6
+                    w-[50%] text-right
+                    overflow-hidden text-ellipsis whitespace-nowrap
                 `}>
                     {word.translation}
                 </div>
@@ -39,7 +42,8 @@ export default function ListItem({word, onDelete, onEdit, index} : ListItemProps
             <div className={`
                     flex flew-row items-center justify-between 
                     gap-2
-                    mr-1
+                    mr-1 ml-2
+                    shrink-0
                 `}>
                     <button className={`
                         active-button
