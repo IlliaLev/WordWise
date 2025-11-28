@@ -54,11 +54,21 @@ export default function CardCarousel() {
         setIdx(idx - 1);
     }
 
-    if(words.length === 0) {
+    /*if(words.length === 0) {
         return (
-            <div>No words yet</div>
+            <div className={`
+                flex items-center justify-center
+                w-full h-full
+                bg-white/50
+                backdrop-blur-sm
+                rounded-[40px_15px_40px_15px]
+                text-3xl
+
+            `}> 
+                No words yet 
+            </div>
         );
-    }
+    }*/
 
     return (
         <div className={`
@@ -93,7 +103,8 @@ export default function CardCarousel() {
                     w-[80%] h-[80%]
                     
                 `} variants={cardVariants} initial="initial" animate="animate" exit="exit" custom={direction} key={idx}>
-                    <FlipCard front={words[idx].original} back={words[idx].translation} bgClassName="w-full h-full" className={`
+
+                    <FlipCard front={words.length !== 0 ? words[idx].original : "Please Create Words"} back={words.length !== 0 ? words[idx].translation : "Still no words"} bgClassName="w-full h-full" className={`
                         bg-white/30
                         text-2xl
                         
