@@ -32,7 +32,7 @@ const cardVariants: Variants = {
 }
 
 export default function CardCarousel() {
-    const {words} = useApp();
+    const words = [{original: "fds", translation: "fdjsk"}]
     const [idx, setIdx] = useState(0);
     const [direction, setDirection] = useState(0);
 
