@@ -24,13 +24,17 @@ export async function createWord(original: string, translation: string) {
 
     if(!user) redirect("/login");
 
-    const { error } = await supabase.from("words").insert({
+    const { data, error } = await supabase.from("words").insert({
         original,
         translation,
         user_id: user.id,
-    });
+    }).select("id, original, translation").single();
 
     if(error) throw error;
+
+    if(!data) throw new Error("Failed to create word");
+
+    return data;
 }
 
 export async function updateWord(id: number, original: string, translation: string) {

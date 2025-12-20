@@ -53,6 +53,22 @@ export default function DictionaryPage() {
 
     const {width, height} = useWindowSize();
 
+    const addWordLocal = (word: Word) => {
+        setWords((prev) => [...prev, word]);
+    }
+
+    const updateWordLocal = (updated: Word) => {
+        setWords((prev) => prev.map((w) => w.id === updated.id ? updated : w));
+    }
+
+    const deleteWordLocal = (id: number) => {
+        setWords((prev) => prev.filter((w) => w.id !== id))
+    }
+
+    const replaceTempWord = (tempId: number, realWord: Word) => {
+        setWords(prev => prev.map(w => (w.id === tempId ? realWord : w)));
+    }
+
     const handleEdit = (word: Word, index: number) => {
         setEditingWord({ ...word});
         setEditingIndex(index);
@@ -61,18 +77,33 @@ export default function DictionaryPage() {
     const handleSave = (updated: Word) => {
         if(!editingWord) return;
         
+        updateWordLocal(updated);
+
         startTransition(async () => {
             await updateWord(updated.id, updated.original, updated.translation);
-            await getAllWords();
         })
 
         setEditingWord(null);
     }
 
     const handleAddWord = () => {
+        const tempId = Date.now();
+
+        const fakeWord = {
+            id: tempId,
+            original: input_1,
+            translation: input_2,
+        };
+
+        addWordLocal(fakeWord);
+
         startTransition(async () => {
-            await createWord(input_1, input_2);
-            await getAllWords();
+            try {
+                const realWord = await createWord(input_1, input_2);
+                replaceTempWord(tempId, realWord);
+            } catch {
+                deleteWordLocal(tempId);
+            }
         });
 
         setInput1("");
@@ -247,10 +278,11 @@ export default function DictionaryPage() {
                                         text-2xl
                                     
                                     `}>
-                                        <ListItem index={w.id} word={w} onDelete={() => startTransition(async () => {
-                                            await deleteWord(w.id);
-                                            await getAllWords();
-                                        })} onEdit={() => handleEdit(w, w.id)}></ListItem>
+                                        <ListItem index={w.id} word={w} onDelete={() => {
+                                            deleteWordLocal(w.id)
+                                            startTransition(async () => {
+                                                await deleteWord(w.id);
+                                        })}} onEdit={() => handleEdit(w, w.id)}></ListItem>
                                     </li>
                                 ))}
                             </ul>
