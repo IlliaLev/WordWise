@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/store/useAppStore";
 import type { Word } from "@/store/useAppStore";
@@ -13,10 +13,18 @@ import FlipCard from "@/components/ui/FlipCard";
 import ModalWindow from "@/components/ui/ModalWindow";
 import Checkbox from "@/components/ui/Checkbox";
 
-export default function DictionaryPage() {
-    const {words, addWord, removeWord, updateWord} = useApp();
+import { getWords, createWord, updateWord, deleteWord } from "@/app/actions/words";
 
-    const {width, height} = useWindowSize();
+export default function DictionaryPage() {
+    const [words, setWords] = useState<Word[]>([]);
+
+    const getAllWords = useCallback(async () => {
+        setWords(await getWords());
+    }, []);
+
+    useEffect(() => {
+        getAllWords();
+    }, [getAllWords]);
 
     const [input_1, setInput1] = useState<string>("");
     const [input_2, setInput2] = useState<string>("");
@@ -35,22 +43,38 @@ export default function DictionaryPage() {
     const [onlyOriginal, setOnlyOriginal] = useState<boolean>(true);
     const [onlyTranslation, setOnlyTranslation] = useState<boolean>(false);
 
+    const [mounted, setMounted] = useState(false);
+
+    const [isPending, startTransition] = useTransition();
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const {width, height} = useWindowSize();
+
     const handleEdit = (word: Word, index: number) => {
         setEditingWord({ ...word});
         setEditingIndex(index);
     }
 
     const handleSave = (updated: Word) => {
-        if(editingIndex !== null) {
-            updateWord(editingIndex, updated);
-        }
+        if(!editingWord) return;
+        
+        startTransition(async () => {
+            await updateWord(updated.id, updated.original, updated.translation);
+            await getAllWords();
+        })
+
         setEditingWord(null);
-        setEditingIndex(null);
     }
 
     const handleAddWord = () => {
-        const word: Word = {original: input_1, translation: input_2, id: Date.now()};
-        addWord(word);
+        startTransition(async () => {
+            await createWord(input_1, input_2);
+            await getAllWords();
+        });
+
         setInput1("");
         setInput2("");
         setIshowed1(false);
@@ -215,15 +239,18 @@ export default function DictionaryPage() {
                                 scrollbar-hide
                                 space-y-2
                                 `}>
-                                {(searchWord.trim() === "" ? words : filteredWords).map((word: Word, idx) => (
-                                    <li key={idx} className={`
+                                {(searchWord.trim() === "" ? words : filteredWords).map((w) => (
+                                    <li key={w.id} className={`
                                         flex items-center justify-center
                                         w-full h-5
                                         py-6
                                         text-2xl
                                     
                                     `}>
-                                        <ListItem index={idx} word={word} onDelete={() => removeWord(word)} onEdit={() => handleEdit(word, idx)}></ListItem>
+                                        <ListItem index={w.id} word={w} onDelete={() => startTransition(async () => {
+                                            await deleteWord(w.id);
+                                            await getAllWords();
+                                        })} onEdit={() => handleEdit(w, w.id)}></ListItem>
                                     </li>
                                 ))}
                             </ul>

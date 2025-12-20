@@ -2,25 +2,44 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {motion, AnimatePresence} from "framer-motion";
 import { useApp } from "@/store/useAppStore";
 import useWindowSize from "@/hooks/useWindowSize";
+import { createClient } from "@/lib/supabase/client";
 
 const links = [
   {href: "/dict/home", label: "Home"},
   {href: "/dict/dictionary", label: "Dictionary"},
   {href: "/dict/cards", label: "Cards"},
   {href: "/dict/about", label: "About"},
+  {href: "/login", label: "Sign In"},
 ];
 
 export default function Navbar() {
+  const supabase = createClient();
+
   const pathname = usePathname();
   const {selectedPage, setSelectedPage} = useApp();
   
   const {width, height} = useWindowSize();
 
   const [mounted, setMounted] = useState(false);
+
+  const [isLogged, setIsLogged] = useState(false);
+
+  const isLoggedIn = useCallback(async () => {
+    const {data: {user}} = await supabase.auth.getUser();
+
+    if(user) {
+      setIsLogged(true);
+    } 
+    //!maybe if not user then false
+  }, [isLogged, supabase]);
+
+  useEffect(() => {
+    isLoggedIn()
+  }, [isLogged, isLoggedIn]);
 
   useEffect(() => {
     setMounted(true);
@@ -43,7 +62,7 @@ export default function Navbar() {
         flex-row
         bg-[#1E1E1E]
         h-15
-        text-2xs
+        text-xs
         md:text-xl
         border-b border-b-[#3D3D3D]
     `}>
@@ -99,8 +118,43 @@ export default function Navbar() {
                     </motion.span>
                   )}
                 
-
-                <Link href={link.href} className={`
+                {link.label === "Sign In" ? 
+                (
+                  <>
+                    {isLogged === true ? 
+                      (
+                        <div className={`
+                          relative 
+                          signout
+                          ${selectedPage === i ? "text-white" : "text-[#858585]"}
+                          group-hover:text-white
+                          
+                          transition-colors duration-200
+                        `}>
+                          <form action="/auth/signout" method="post" className="signout">
+                            <button type="submit" className="signout">
+                              Sign Out
+                            </button>
+                          </form>
+                        </div>
+                      )
+                      :
+                      (
+                        <Link href={link.href} className={`
+                          relative
+                          ${selectedPage === i ? "text-white" : "text-[#858585]"}
+                          group-hover:text-white
+                          
+                          transition-colors duration-200
+                        `}>
+                          {link.label}
+                        </Link>
+                      )
+                    }
+                  </>
+                )
+                :
+                (<Link href={link.href} className={`
                     relative
                     ${selectedPage === i ? "text-white" : "text-[#858585]"}
                     group-hover:text-white
@@ -108,7 +162,7 @@ export default function Navbar() {
                     transition-colors duration-200
                   `}>
                   {link.label}
-                </Link>
+                </Link>)}
             </div>
           ))}
         </div>
