@@ -24,31 +24,44 @@ export default function signupPage() {
         `}>
             <div className={`
                 flex items-center justify-center
-                w-120 h-150  
+                w-80 h-110
+                md:w-120 md:h-150  
                 bg-white/50
                 rounded-[40px_15px_40px_15px]
                 backdrop-blur-sm
             `}>
                 <main className={`
                     flex flex-col items-center
-                    w-110 h-140
+                    w-70 h-100
+                    md:w-110 md:h-140
                     bg-white/30
                     rounded-[40px_15px_40px_15px]
                 `}>
                     <div className={`
                         w-full  
-                        mt-10 mx-10
+                        mt-5
+                        md:mt-10 
+                        mx-10
                     `}>
                         <h1 className={`
                             text-center 
-                            font-bold text-3xl select-none
+                            font-bold 
+                            text-2xl
+                            md:text-3xl  
+                            select-none
                         `}>Let's Get Started</h1>
                     </div>
                     <div className={`
-                       w-100 mt-15 
+                       w-60 
+                       md:w-100
+                       mt-7
+                       md:mt-15 
                     `}>
                         <h2 className={`
-                            font-semibold text-2xl select-none  
+                            font-semibold 
+                            text-xl
+                            md:text-2xl 
+                            select-none  
                         `}>E-mail</h2>
                         <div className={`
                             flex flex-col justify-center
@@ -79,7 +92,10 @@ export default function signupPage() {
                         </div>
 
                         <h2 className={`
-                            font-semibold text-2xl select-none mt-7
+                            font-semibold 
+                            text-xl
+                            md:text-2xl 
+                            select-none mt-7
                         `}>Password</h2>
                         <div className={`
                             flex flex-col justify-center
@@ -109,13 +125,20 @@ export default function signupPage() {
                             </AnimatePresence>
                         </div>
                         <div className={`
-                            flex flex-col items-center justify-center mt-20 mb-10 
+                            flex flex-col items-center justify-center 
+                            mt-5
+                            md:mt-20 
+                            mb-5
+                            md:mb-10 
                         `}>
                             <RippleButton active={!isPending} onClick={() => startTransition(async () => {
                                 await signup(email, password);
                                 router.push("/dict/dictionary");
                             })} className={`
-                                w-70 h-15
+                                w-45
+                                md:w-70 
+                                h-10
+                                md:h-15
                                 ${(email.trim() !== "" && password.trim() !== "") ? "bg-[#00F58B]/50" : "bg-[#00A35C]/50"}
                                 ${(email.trim() !== "" && password.trim() !== "") ? "active-button" : "banned-button"}
                                 rounded-[20px_5px_20px_5px]
