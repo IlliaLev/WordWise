@@ -3,8 +3,13 @@
 import CardCarousel from "@/components/ui/CardCarousel";
 import useWindowSize from "@/hooks/useWindowSize";
 
+import { createClient } from "@/lib/supabase/client";
+import { useCallback, useEffect } from "react";
+
 export default function CardsPage() {
     const {width, height} = useWindowSize();
+
+    
 
     return (
         <div className={`
