@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  icons: {
+    icon: "/logo.svg",
+  },
+};
 
 import "./globals.css";
 import ScrollToTopButton from "@/components/ui/ScrollToTopButton";
