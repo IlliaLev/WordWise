@@ -4,6 +4,10 @@ export const metadata: Metadata = {
   icons: {
     icon: "/logo-tab.svg",
   },
+  title: {
+    default: "Word Wise",
+    template: "%s | Word Wise",
+  },
 };
 
 import "./globals.css";
