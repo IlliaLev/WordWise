@@ -8,9 +8,10 @@ interface CheckboxProps {
     checked: boolean,
     onChange: () => void,
     label?: string,
+    size: string,
 }
 
-export default function Checkbox({checked, onChange, label} : CheckboxProps) {
+export default function Checkbox({checked, onChange, label, size} : CheckboxProps) {
     const [hovered, setHovered] = useState<boolean>(false);
 
     return (
@@ -22,7 +23,7 @@ export default function Checkbox({checked, onChange, label} : CheckboxProps) {
             `}/>
 
             <div className={`
-                w-6 h-6 flex items-center justify-center
+                ${size} flex items-center justify-center
                 rounded-md
             `}>
                 <motion.div className={`

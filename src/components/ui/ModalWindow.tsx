@@ -66,7 +66,8 @@ export default function ModalWindow({word, onClose, onSave} : ModalWindowProps) 
                         <motion.div className={`
                             flex flex-col
                             bg-white/50  
-                            w-120 h-80
+                            w-80 h-70
+                            md:w-120 md:h-80
                             rounded-[40px_15px_40px_15px]
                             p-5
                         `} initial={{

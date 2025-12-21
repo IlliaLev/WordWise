@@ -212,14 +212,16 @@ export default function DictionaryPage() {
                                         ml-3 md:ml-0
                                         
                                         
-                                    `} size={width <= 768 ? 35 : 25}/>
+                                    `} size={width <= 768 ? 30 : 25}/>
                                     <div className={`
                                         flex flex-col items-center justify-center 
                                         mr-5 md:mr-0
                                     `}>
                                         
                                         <input type="text" placeholder="Find word" onFocus={() => setIshowed3(true)} onBlur={() => setIshowed3(searchWord.trim() !== "" ? true : false)} value={searchWord} onChange={(e) => handleSearch(e.target.value)} className={`
-                                            outline-none text-2xl
+                                            outline-none 
+                                            text-2xs
+                                            md:text-2xl
                                             w-full md:w-auto
                                             
                                             
@@ -248,11 +250,13 @@ export default function DictionaryPage() {
                                 </div>
                                 <div className={`
                                     flex flex-row gap-3 
-                                    text-xl font-semibold
+                                    text-2xs
+                                    md:text-xl 
+                                    font-semibold
                                     
                                 `}>
-                                    <Checkbox checked={onlyOriginal} onChange={handleOnlyOriginal} label="Originals"></Checkbox>
-                                    <Checkbox checked={onlyTranslation} onChange={handleOnlyTranslation} label="Translations"></Checkbox>
+                                    <Checkbox size="w-6 h-6 md:w-6 md:h-6" checked={onlyOriginal} onChange={handleOnlyOriginal} label="Originals"></Checkbox>
+                                    <Checkbox size="w-6 h-6 md:w-6 md:h-6" checked={onlyTranslation} onChange={handleOnlyTranslation} label="Translations"></Checkbox>
                                 </div>
                             </div>
                         </div>
@@ -275,7 +279,8 @@ export default function DictionaryPage() {
                                         flex items-center justify-center
                                         w-full h-5
                                         py-6
-                                        text-2xl
+                                        text-2xs
+                                        md:text-2xl
                                     
                                     `}>
                                         <ListItem index={w.id} word={w} onDelete={() => {
@@ -311,7 +316,8 @@ export default function DictionaryPage() {
                                         w-[80%] h-[60%]
                                         rounded-[20px_5px_0px_0px]
                                         text-center
-                                        text-2xl
+                                        text-xl
+                                        md:text-2xl
                                         hover:bg-white/30
                                         focus:bg-white/30
                                         transition duration-300
@@ -351,7 +357,8 @@ export default function DictionaryPage() {
                                         w-[80%] h-[60%]
                                         rounded-[20px_5px_0px_0px]
                                         text-center
-                                        text-2xl
+                                        text-xl
+                                        md:text-2xl
                                         hover:bg-white/30 
                                         focus:bg-white/30
                                         transition duration-300
@@ -389,7 +396,9 @@ export default function DictionaryPage() {
                                     rounded-[20px_5px_20px_5px]
                                     backdrop-blur-sm
                                     transition duration-300
-                                    text-white text-center text-2xl
+                                    text-white text-center 
+                                    text-xl
+                                    md:text-2xl
                                     outline-none
                                     `} onClick={handleAddWord} active={(input_1.trim() !== "" && input_2.trim() !== "")}>
                                     Add Word
