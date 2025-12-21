@@ -179,7 +179,7 @@ export default function DictionaryPage() {
                     bg-white/50 
                     w-full
                     md:w-[60%] md:min-h-200 
-                    min-w-60
+                    min-w-60 min-h-100
                     rounded-[40px_15px_40px_15px]
                     backdrop-blur-sm
                     `}>
@@ -258,7 +258,7 @@ export default function DictionaryPage() {
                         </div>
                         <div className={`
                             mb-10
-                            w-[90%] h-full
+                            w-[90%] h-full min-h-70
                             bg-white/30
                             rounded-[0_0_40px_15px]
                             p-6
