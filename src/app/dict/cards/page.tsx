@@ -5,7 +5,7 @@ import useWindowSize from "@/hooks/useWindowSize";
 
 export default function CardsPage() {
     const {width, height} = useWindowSize();
-    
+
     return (
         <div className={`
             my-5

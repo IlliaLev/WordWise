@@ -1,10 +1,11 @@
 "use client";
 
-import { useApp } from "@/store/useAppStore";
-import { useState } from "react";
+import { type Word } from "@/store/useAppStore";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import FlipCard from "./FlipCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getWords } from "@/app/actions/words";
 
 const cardVariants: Variants = {
     initial: direction => {
@@ -32,7 +33,16 @@ const cardVariants: Variants = {
 }
 
 export default function CardCarousel() {
-    const words = [{original: "fds", translation: "fdjsk"}]
+    const [words, setWords] = useState<Word[]>([]);
+
+    const getAllWords = useCallback(async () => {
+        setWords(await getWords());
+    }, []);
+
+    useEffect(() => {
+        getAllWords();
+    }, [getAllWords]);
+
     const [idx, setIdx] = useState(0);
     const [direction, setDirection] = useState(0);
 
