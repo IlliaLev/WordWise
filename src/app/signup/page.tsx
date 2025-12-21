@@ -24,7 +24,7 @@ export default function signupPage() {
         `}>
             <div className={`
                 flex items-center justify-center
-                w-80 h-110
+                w-80 h-130
                 md:w-120 md:h-150  
                 bg-white/50
                 rounded-[40px_15px_40px_15px]
@@ -32,7 +32,7 @@ export default function signupPage() {
             `}>
                 <main className={`
                     flex flex-col items-center
-                    w-70 h-100
+                    w-70 h-120
                     md:w-110 md:h-140
                     bg-white/30
                     rounded-[40px_15px_40px_15px]
@@ -147,10 +147,15 @@ export default function signupPage() {
                             `}>
                                 {isPending ? "Creating Account" : "Sign Up"}
                             </RippleButton>
-                            <div className="mt-1">
+                            <div className="md:mt-1 mt-5">
                                 <p>Already have an account? <span className={`
                                     font-semibold text-[#1E1E1E] auth-pointer
                                 `} onClick={() => router.push("/login")}>Log In Here</span></p>
+                            </div>
+                            <div className="mt-1">
+                                <p>Want to go to the home page? <span className={`
+                                    font-semibold text-[#1E1E1E] auth-pointer
+                                `} onClick={() => router.push("/dict/home")}>Click Here</span></p>
                             </div>
                         </div>
                     </div>

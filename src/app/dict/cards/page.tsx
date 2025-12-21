@@ -21,7 +21,7 @@ export default function CardsPage() {
                 <WordCarousel></WordCarousel>
             </div>*/}
             <div className={`  
-                ${width > height ? "h-[80%]" : "w-[80%]"}
+                ${width > height ? "h-[80%] max-h-[80%]" : "w-[80%] max-w-[80%]"}
                 aspect-square
             `}>
                 <CardCarousel></CardCarousel>
