@@ -182,6 +182,8 @@ export default function DictionaryPage() {
                     min-w-60 min-h-100
                     rounded-[40px_15px_40px_15px]
                     backdrop-blur-sm
+                    border-2 border-[#1E1E1E]
+                    drop-shadow-md drop-shadow-black
                     `}>
                         <div className={`
                             mt-10 ml-10 mr-10
@@ -299,17 +301,24 @@ export default function DictionaryPage() {
                     w-full items-center 
                     md:w-[40%] h-200
                     md:max-w-83
+                    
                     `}>
                         <div className={`
                             flex flex-col justify-between
                             min-h-80
+                            bg-white/50
+                            backdrop-blur-sm
+                            p-4
+                            rounded-[40px_15px_40px_15px]
+                            border-2 border-[#1E1E1E]
+                            drop-shadow-md drop-shadow-black
                             `}>
                             <div className={`
                                 flex flex-col items-center justify-center
                                 w-full h-20
-                                bg-white/50
+                                bg-white/30
                                 rounded-[20px_5px_20px_5px]
-                                backdrop-blur-sm
+                                
                                 `}>
                                     <input className={`
                                         outline-none
@@ -348,9 +357,9 @@ export default function DictionaryPage() {
                             <div className={`
                                 flex flex-col items-center justify-center
                                 w-full h-20
-                                bg-white/50
+                                bg-white/30
                                 rounded-[20px_5px_20px_5px]
-                                backdrop-blur-sm
+                                
                                 `}>
                                     <input className={`
                                         outline-none
@@ -394,7 +403,6 @@ export default function DictionaryPage() {
                                     ${(input_1.trim() !== "" && input_2.trim() !== "") ? "bg-[#00F58B]/50" : "bg-[#00A35C]/50"}
                                     ${(input_1.trim() !== "" && input_2.trim() !== "") ? "active-button" : "banned-button"}
                                     rounded-[20px_5px_20px_5px]
-                                    backdrop-blur-sm
                                     transition duration-300
                                     text-white text-center 
                                     text-xl
@@ -414,6 +422,8 @@ export default function DictionaryPage() {
                             bg-white/50
                             rounded-[40px_15px_40px_15px]
                             backdrop-blur-sm
+                            border-2 border-[#1E1E1E]
+                            drop-shadow-md drop-shadow-black
                         `}>
                                 <FlipCard front={randomWord.original} back={randomWord.translation} bgClassName=" w-[90%] h-[90%]" className={`
                                     bg-white/30
