@@ -7,13 +7,14 @@ import {motion, AnimatePresence} from "framer-motion";
 import { useApp } from "@/store/useAppStore";
 import useWindowSize from "@/hooks/useWindowSize";
 import { createClient } from "@/lib/supabase/client";
+import { CircleUserRound, LogOut, Settings } from "lucide-react";
+import ProfileWindow from "./ProfileWindow";
 
 const links = [
   {href: "/dict/home", label: "Home"},
   {href: "/dict/dictionary", label: "Dictionary"},
   {href: "/dict/cards", label: "Cards"},
   {href: "/dict/about", label: "About"},
-  {href: "/login", label: "Sign In"},
 ];
 
 export default function Navbar() {
@@ -28,13 +29,14 @@ export default function Navbar() {
 
   const [isLogged, setIsLogged] = useState(false);
 
+  const [isVisible, setIsVisible] = useState(false);
+
   const isLoggedIn = useCallback(async () => {
     const {data: {user}} = await supabase.auth.getUser();
 
     if(user) {
       setIsLogged(true);
     } 
-    //!maybe if not user then false
   }, [isLogged, supabase]);
 
   useEffect(() => {
@@ -85,9 +87,10 @@ export default function Navbar() {
           </div>) : (<></>)}
         </div>
         <div className={`
-          flex flex-row
+          flex flex-row items-center
           mr-5 space-x-2
           relative
+          
           `}>
             
           {links.map((link, i) => (
@@ -97,7 +100,7 @@ export default function Navbar() {
                 relative group
                 hover:bg-white/40
                 rounded-lg
-                py-1 px-1 
+                px-1 
                 transition duration-300
                 `}
               onClick={() => handleClickedIndex(i)} 
@@ -106,7 +109,7 @@ export default function Navbar() {
                   {selectedPage === i && (
                     <motion.span 
                       layoutId="hoverBackground"
-                      className="absolute left-0 mt-1 inset-y-full rounded-md bg-white w-full h-0.5"
+                      className="absolute left-0 mt-0.5 inset-y-full rounded-md bg-white w-full h-0.5"
                       transition={
                         {
                           type: "spring", 
@@ -118,43 +121,7 @@ export default function Navbar() {
                     </motion.span>
                   )}
                 
-                {link.label === "Sign In" ? 
-                (
-                  <>
-                    {isLogged === true ? 
-                      (
-                        <div className={`
-                          relative 
-                          signout
-                          ${selectedPage === i ? "text-white" : "text-[#858585]"}
-                          group-hover:text-white
-                          
-                          transition-colors duration-200
-                        `}>
-                          <form action="/auth/signout" method="post" className="signout">
-                            <button type="submit" className="signout">
-                              Sign Out
-                            </button>
-                          </form>
-                        </div>
-                      )
-                      :
-                      (
-                        <Link href={link.href} className={`
-                          relative
-                          ${selectedPage === i ? "text-white" : "text-[#858585]"}
-                          group-hover:text-white
-                          
-                          transition-colors duration-200
-                        `}>
-                          {link.label}
-                        </Link>
-                      )
-                    }
-                  </>
-                )
-                :
-                (<Link href={link.href} className={`
+                <Link href={link.href} className={`
                     relative
                     ${selectedPage === i ? "text-white" : "text-[#858585]"}
                     group-hover:text-white
@@ -162,9 +129,72 @@ export default function Navbar() {
                     transition-colors duration-200
                   `}>
                   {link.label}
-                </Link>)}
+                </Link>
             </div>
           ))}
+          {/*//! Create user here*/}
+          <div>
+            {isLogged === true ? (
+              <>
+                <button className={`
+                  flex flex-col items-center justify-center
+                  text-[#858585]
+                  md:h-full
+                  hover:text-white
+                  transitition-colors duration-200
+                  active-button
+                `} onClick={() => setIsVisible(true)} disabled={isVisible}>
+                  <CircleUserRound></CircleUserRound>
+                </button>
+                <ProfileWindow isVisible={isVisible} onClose={() => setIsVisible(false)}>
+                  <div className={`
+                      flex flex-col items-start justify-end
+                      bg-[#1E1E1E] border border-[#3D3D3D]
+                      h-40 w-30
+                      rounded-[15px_5px_15px_5px]
+                      space-y-1
+                  `}>
+                    <Link href={"/dict/settings"} className="group text-xl text-[#858585] group-hover:text-white mx-1">
+                      <div className="flex flex-row group-hover:text-white transition-colors duration-200">
+                        <Settings className="mr-1"></Settings>
+                        Settings
+                      </div>
+                    </Link>
+
+                    <form action="/auth/signout" method="post" className="mb-1.5 mx-1">
+                      <button type="submit" className={`
+                        group signout
+                        text-xl
+                        text-[#858585]
+                      `}>
+                        <div className="flex flex-row group-hover:text-white transition-colors duration-200">
+                          <LogOut className="mr-1"></LogOut>
+                          Sign Out
+                        </div>
+                      </button>
+                    </form>
+                  </div>
+                </ProfileWindow>
+              </>
+            ) : (
+              <div className={`
+                relative group
+                hover:bg-white/40
+                rounded-lg
+                px-1 
+                transition duration-300
+              `}>
+                <Link href={"/login"} className={`
+                hover:text-white
+                text-[#858585]
+                transition-colors duration-200
+                `}>
+                  Sign In
+                </Link>
+              </div>
+            )
+            }
+          </div> 
         </div>
     </nav>
   );

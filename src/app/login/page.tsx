@@ -30,6 +30,8 @@ export default function loginPage() {
                 bg-white/50
                 rounded-[40px_15px_40px_15px]
                 backdrop-blur-sm
+                border-2 border-[#1E1E1E]
+                drop-shadow-md drop-shadow-black
             `}>
                 <main className={`
                     flex flex-col items-center
