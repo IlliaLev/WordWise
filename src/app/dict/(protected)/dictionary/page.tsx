@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, useCallback, useTransition } from "react"
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/store/useAppStore";
 import type { Word } from "@/store/useAppStore";
-import { Search } from "lucide-react";
+import { Search, ArrowBigUpDash } from "lucide-react";
 import useWindowSize from "@/hooks/useWindowSize";
 
 import RippleButton from "@/components/ui/RippleButton";
@@ -14,6 +14,7 @@ import ModalWindow from "@/components/ui/ModalWindow";
 import Checkbox from "@/components/ui/Checkbox";
 
 import { getWords, createWord, updateWord, deleteWord } from "@/app/actions/words";
+import useIsMobile from "@/hooks/useIsMobile";
 
 export default function DictionaryPage() {
     const [words, setWords] = useState<Word[]>([]);
@@ -42,6 +43,11 @@ export default function DictionaryPage() {
 
     const [onlyOriginal, setOnlyOriginal] = useState<boolean>(true);
     const [onlyTranslation, setOnlyTranslation] = useState<boolean>(false);
+
+    const [showAll, setShowAll] = useState<boolean>(false);
+
+    const isMobile = useIsMobile();
+    const PREVIEW_COUNT = isMobile ? 5 : 11;
 
     const [mounted, setMounted] = useState(false);
 
@@ -175,7 +181,7 @@ export default function DictionaryPage() {
                 justify-between
                 `}>
                 <div className={`
-                    flex flex-col items-center justify-center
+                    relative flex flex-col items-center justify-center
                     bg-white/50 
                     w-full
                     md:w-[60%] md:min-h-200 
@@ -263,6 +269,7 @@ export default function DictionaryPage() {
                             </div>
                         </div>
                         <div className={`
+                            
                             mb-10
                             w-[90%] h-full min-h-70
                             bg-white/30
@@ -270,29 +277,58 @@ export default function DictionaryPage() {
                             p-6
                             overflow-hidden
                             `}>
-                            <ul className={`
+                            <motion.ul className={`
                                 flex  flex-col items-center
                                 w-full h-full
                                 scrollbar-hide
                                 space-y-2
                                 `}>
-                                {(searchWord.trim() === "" ? words : filteredWords).map((w) => (
-                                    <li key={w.id} className={`
+                                {(searchWord.trim() === "" ? words : filteredWords).slice(0, showAll ? undefined : PREVIEW_COUNT).map((w) => (
+                                    <motion.li key={w.id} className={`
                                         flex items-center justify-center
                                         w-full h-5
                                         py-6
                                         text-2xs
                                         md:text-2xl
                                     
-                                    `}>
+                                    `} layout="position" initial={{
+                                        opacity: 0,
+                                        y: 10,
+                                    }} animate={{
+                                        opacity: 1,
+                                        y: 0,
+                                    }} exit={{
+                                        opacity: 0,
+                                        y: -10,
+                                    }}>
                                         <ListItem index={w.id} word={w} onDelete={() => {
                                             deleteWordLocal(w.id)
                                             startTransition(async () => {
                                                 await deleteWord(w.id);
                                         })}} onEdit={() => handleEdit(w, w.id)}></ListItem>
-                                    </li>
+                                    </motion.li>
                                 ))}
-                            </ul>
+                            </motion.ul>
+                            <button className={`
+                                absolute bottom-3 left-[50%] -translate-x-[50%] active-button
+                                rounded-full
+                                p-2
+                                transition duration-300 
+                                bg-[#1E1E1E] border border-[#3D3D3D]
+                                hover:bg-[#2D2D2D]
+                                text-white  
+                                drop-shadow-black drop-shadow-sm
+                            `} onClick={() => setShowAll(prev => !prev)}>
+                                <motion.div animate={{
+                                    rotate: !showAll ? 180 : 0,
+                                    transition: {
+                                        ease: "easeInOut",
+                                        duration: 0.2,
+                                    }
+                                }}>
+                                    <ArrowBigUpDash className="w-8 h-8"></ArrowBigUpDash>
+                                </motion.div>
+                            </button>
                         </div>
                 </div>
                 <div className={`
