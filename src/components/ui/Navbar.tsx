@@ -30,6 +30,8 @@ export default function Navbar() {
   const [isLogged, setIsLogged] = useState(false);
 
   const [isVisible, setIsVisible] = useState(false);
+  
+  const [visibleUnderline, setVisibleUnderline] = useState(true);
 
   const isLoggedIn = useCallback(async () => {
     const {data: {user}} = await supabase.auth.getUser();
@@ -56,6 +58,11 @@ export default function Navbar() {
 
   const handleClickedIndex = (i: number) => {
     setSelectedPage(i);
+  }
+
+  const handleProfileWindowOptions = () => {
+    setIsVisible(false);
+    setVisibleUnderline(false);
   }
 
   return (
@@ -106,7 +113,7 @@ export default function Navbar() {
               onClick={() => handleClickedIndex(i)} 
               >
                 
-                  {selectedPage === i && (
+                  {selectedPage === i && visibleUnderline && (
                     <motion.span 
                       layoutId="hoverBackground"
                       className="absolute left-0 mt-0.5 inset-y-full rounded-md bg-white w-full h-0.5"
@@ -121,9 +128,9 @@ export default function Navbar() {
                     </motion.span>
                   )}
                 
-                <Link href={link.href} className={`
+                <Link href={link.href} onClick={() => setVisibleUnderline(true)} className={`
                     relative
-                    ${selectedPage === i ? "text-white" : "text-[#858585]"}
+                    ${selectedPage === i && visibleUnderline ? "text-white" : "text-[#858585]"}
                     group-hover:text-white
                     
                     transition-colors duration-200
@@ -154,7 +161,7 @@ export default function Navbar() {
                       rounded-[15px_5px_15px_5px]
                       space-y-1
                   `}>
-                    <Link onClick={() => setIsVisible(false)} href={"/dict/profile/settings"} className="group text-xl text-[#858585] group-hover:text-white mx-1">
+                    <Link onClick={handleProfileWindowOptions} href={"/dict/profile/settings"} className="group text-xl text-[#858585] group-hover:text-white mx-1">
                       <div className="flex flex-row group-hover:text-white transition-colors duration-200">
                         <Settings className="mr-1"></Settings>
                         Settings
