@@ -154,7 +154,7 @@ export default function Navbar() {
                       rounded-[15px_5px_15px_5px]
                       space-y-1
                   `}>
-                    <Link href={"/dict/settings"} className="group text-xl text-[#858585] group-hover:text-white mx-1">
+                    <Link onClick={() => setIsVisible(false)} href={"/dict/profile/settings"} className="group text-xl text-[#858585] group-hover:text-white mx-1">
                       <div className="flex flex-row group-hover:text-white transition-colors duration-200">
                         <Settings className="mr-1"></Settings>
                         Settings
