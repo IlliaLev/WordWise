@@ -104,7 +104,7 @@ export default function CardCarousel() {
                 drop-shadow-md drop-shadow-black
             `}>
                 <button className={`
-                    absolute 
+                    absolute active-button
                     top-1/2 -translate-y-1/2
                     left-2
                     bg-[#1E1E1E] border border-[#3D3D3D]
@@ -139,7 +139,7 @@ export default function CardCarousel() {
                     </motion.div>
                 </AnimatePresence>
                 <button className={`
-                    absolute 
+                    absolute active-button
                     top-1/2 -translate-y-1/2
                     right-2 
                     bg-[#1E1E1E] border border-[#3D3D3D]
