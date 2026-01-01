@@ -4,7 +4,7 @@ import { type Word } from "@/store/useAppStore";
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import FlipCard from "./FlipCard";
-import { ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Shuffle, ArrowRightLeft } from "lucide-react";
 import { getWords } from "@/app/actions/words";
 import { randomPermutation } from "@/lib/array/randomPermutation";
 
@@ -35,6 +35,8 @@ const cardVariants: Variants = {
 
 export default function CardCarousel() {
     const [words, setWords] = useState<Word[]>([]);
+
+    const [isOriginal, setIsOriginal] = useState(true);
 
     const getAllWords = useCallback(async () => {
         setWords(await getWords());
@@ -67,6 +69,10 @@ export default function CardCarousel() {
 
     const handleShuffle = () => {
         setWords(randomPermutation(words));
+    }
+
+    const handleOriginalChange = () => {
+        setIsOriginal((prev) => !prev);
     }
 
     /*if(words.length === 0) {
@@ -122,7 +128,7 @@ export default function CardCarousel() {
                     
                     `} variants={cardVariants} initial="initial" animate="animate" exit="exit" custom={direction} key={idx}>
 
-                        <FlipCard front={words.length !== 0 ? words[idx].original : "Please Create Words"} back={words.length !== 0 ? words[idx].translation : "Still no words"} bgClassName="w-full h-full" className={`
+                        <FlipCard isOriginal={isOriginal} front={words.length !== 0 ? words[idx].original : "Please Create Words"} back={words.length !== 0 ? words[idx].translation : "Still no words"} bgClassName="w-full h-full" className={`
                             bg-white/30
                             text-2xl
                         
@@ -158,7 +164,15 @@ export default function CardCarousel() {
                 rounded-[20px_5px_20px_5px]
                 border-2 border-[#1E1E1E]
                 drop-shadow-md drop-shadow-black
+                space-x-1.5
             `}>
+                <button className={`
+                    mr-3 active-button
+                    hover:text-white
+                    transition duration-300
+                `} onClick={handleOriginalChange}>
+                    <ArrowRightLeft></ArrowRightLeft>
+                </button>
                 <button className={`
                     mr-3 active-button
                     hover:text-white

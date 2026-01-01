@@ -10,9 +10,10 @@ interface FlipCardProps {
     bgClassName?: string,
     className: string,
     bg?: string,
+    isOriginal: boolean,
 }
 
-export default function FlipCard({front, back, bgClassName, className, bg} : FlipCardProps) {
+export default function FlipCard({front, back, bgClassName, className, bg, isOriginal} : FlipCardProps) {
     const [flipped, setFlipped] = useState(false);
 
   return (
@@ -42,7 +43,7 @@ export default function FlipCard({front, back, bgClassName, className, bg} : Fli
               `}
           >
             <div className="px-4 text-center wrap-anywhere whitespace-normal">
-              {front}
+              {isOriginal ? <>{front}</> : <>{back}</>}
             </div>
           </div>
 
@@ -57,7 +58,7 @@ export default function FlipCard({front, back, bgClassName, className, bg} : Fli
               `}
           >
             <div className="px-4 text-center wrap-anywhere whitespace-normal">
-              {back}
+              {isOriginal ? <>{back}</> : <>{front}</>}
             </div>
           </div>
         </motion.div>
