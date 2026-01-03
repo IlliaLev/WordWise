@@ -204,7 +204,7 @@ export default function DictionaryPage() {
                     bg-white/50 
                     w-full
                     md:w-[60%] md:h-200 
-                    min-w-60 h-100
+                    min-w-60 h-120
                     rounded-[40px_15px_40px_15px]
                     backdrop-blur-sm
                     border-2 border-[#1E1E1E]
@@ -213,7 +213,7 @@ export default function DictionaryPage() {
                         <div className={`
                             mt-10 ml-10 mr-10
                             w-[90%] 
-                            ${width >= 1340 ? "h-20" : "h-25 md:h-30"}
+                            ${width >= 1340 ? "min-h-20" : "min-h-25 md:min-h-30"}
                             bg-white/30
                             overflow-hidden
                             rounded-[40px_15px_0_0]
@@ -290,7 +290,7 @@ export default function DictionaryPage() {
                         <div ref={listContainerRef} className={`
                             
                             mb-10
-                            w-[90%] h-full min-h-70
+                            w-[90%] md:h-full md:min-h-70 min-h-70
                             bg-white/30
                             rounded-[0_0_40px_15px]
                             p-6
