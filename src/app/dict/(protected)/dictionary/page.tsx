@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback, useTransition } from "react";
+import { useState, useEffect, useMemo, useCallback, useTransition, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "@/store/useAppStore";
 import type { Word } from "@/store/useAppStore";
@@ -53,6 +53,11 @@ export default function DictionaryPage() {
 
     const [isPending, startTransition] = useTransition();
 
+    const [scrollToId, setScrollToId] = useState<number | null>(null);
+
+    const listContainerRef = useRef<HTMLDivElement | null>(null);
+    const lastItemRef = useRef<HTMLLIElement | null>(null);
+
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -102,13 +107,16 @@ export default function DictionaryPage() {
         };
 
         addWordLocal(fakeWord);
+        setScrollToId(tempId);
 
         startTransition(async () => {
             try {
                 const realWord = await createWord(input_1, input_2);
                 replaceTempWord(tempId, realWord);
+                setScrollToId(realWord.id);
             } catch {
                 deleteWordLocal(tempId);
+                setScrollToId(null);
             }
         });
 
@@ -152,6 +160,17 @@ export default function DictionaryPage() {
         setRandomWord(getRandomWord());
     }, [words]);
 
+    useEffect(() => {
+        if(!scrollToId) return;
+
+        requestAnimationFrame(() => {
+            lastItemRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+            });
+        });
+    }, [scrollToId ,words])
+
     const filteredWords = useMemo(() => {
         if(onlyOriginal && !onlyTranslation) {
             return words.filter((w) => 
@@ -184,8 +203,8 @@ export default function DictionaryPage() {
                     relative flex flex-col items-center justify-center
                     bg-white/50 
                     w-full
-                    md:w-[60%] md:min-h-200 
-                    min-w-60 min-h-100
+                    md:w-[60%] md:h-200 
+                    min-w-60 h-100
                     rounded-[40px_15px_40px_15px]
                     backdrop-blur-sm
                     border-2 border-[#1E1E1E]
@@ -268,67 +287,39 @@ export default function DictionaryPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className={`
+                        <div ref={listContainerRef} className={`
                             
                             mb-10
                             w-[90%] h-full min-h-70
                             bg-white/30
                             rounded-[0_0_40px_15px]
                             p-6
-                            overflow-hidden
+                            overflow-y-scroll
+                            scrollbar scrollbar-w-0
                             `}>
-                            <motion.ul className={`
+                            <ul className={`
                                 flex  flex-col items-center
-                                w-full h-full
-                                scrollbar-hide
+                                w-full h-full max-h-full
+                                
                                 space-y-2
                                 `}>
-                                {(searchWord.trim() === "" ? words : filteredWords).slice(0, showAll ? undefined : PREVIEW_COUNT).map((w) => (
-                                    <motion.li key={w.id} className={`
+                                {/**.slice(0, showAll ? undefined : PREVIEW_COUNT) */ (searchWord.trim() === "" ? words : filteredWords).map((w) => (
+                                    <li key={w.id} ref={w.id === scrollToId ? lastItemRef : null} className={`
                                         flex items-center justify-center
                                         w-full h-5
                                         py-6
                                         text-2xs
                                         md:text-2xl
                                     
-                                    `} layout="position" initial={{
-                                        opacity: 0,
-                                        y: 10,
-                                    }} animate={{
-                                        opacity: 1,
-                                        y: 0,
-                                    }} exit={{
-                                        opacity: 0,
-                                        y: -10,
-                                    }}>
+                                    `}>
                                         <ListItem index={w.id} word={w} onDelete={() => {
                                             deleteWordLocal(w.id)
                                             startTransition(async () => {
                                                 await deleteWord(w.id);
                                         })}} onEdit={() => handleEdit(w, w.id)}></ListItem>
-                                    </motion.li>
+                                    </li>
                                 ))}
-                            </motion.ul>
-                            <button className={`
-                                absolute bottom-3 left-[50%] -translate-x-[50%] active-button
-                                rounded-full
-                                p-2
-                                transition duration-300 
-                                bg-[#1E1E1E] border border-[#3D3D3D]
-                                hover:bg-[#2D2D2D]
-                                text-white  
-                                drop-shadow-black drop-shadow-sm
-                            `} onClick={() => setShowAll(prev => !prev)}>
-                                <motion.div animate={{
-                                    rotate: !showAll ? 180 : 0,
-                                    transition: {
-                                        ease: "easeInOut",
-                                        duration: 0.2,
-                                    }
-                                }}>
-                                    <ArrowBigUpDash className="w-8 h-8"></ArrowBigUpDash>
-                                </motion.div>
-                            </button>
+                            </ul>
                         </div>
                 </div>
                 <div className={`

@@ -1,10 +1,14 @@
 @import "tailwindcss";
+@plugin 'tailwind-scrollbar' {
+    nocompatible: true;
+    preferredStrategy: 'pseudoelements';
+}
 
 @tailwind utilities;
 
 
 .bg-triangles {
-    background-image: url("/bg.svg");
+    background-image: url("/bg.png");
     background-position: center;
     background-repeat: repeat;
 }
@@ -31,6 +35,10 @@
   box-shadow: 0 0 0 1000px transparent inset !important;
   -webkit-text-fill-color: inherit !important;
   transition: background-color 9999s ease-out 0s;
+}
+
+li {
+    contain: layout paint;
 }
 
 @layer utilities {
