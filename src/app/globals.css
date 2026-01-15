@@ -27,6 +27,10 @@
     display: none;
 }
 
+.page-height {
+    height: calc(100dvh - 60px);
+}
+
 #email:-webkit-autofill,
 #email:-webkit-autofill:hover,
 #email:-webkit-autofill:focus,

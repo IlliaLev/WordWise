@@ -98,7 +98,7 @@ export default function CardCarousel() {
                 overflow-hidden
                 w-full h-full
                 bg-white/50
-                backdrop-blur-sm
+                
                 rounded-[40px_15px_40px_15px]
                 border-2 border-[#1E1E1E]
                 drop-shadow-md drop-shadow-black

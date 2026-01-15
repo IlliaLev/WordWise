@@ -206,7 +206,7 @@ export default function DictionaryPage() {
                     md:w-[60%] md:h-200 
                     min-w-60 h-120
                     rounded-[40px_15px_40px_15px]
-                    backdrop-blur-sm
+                    
                     border-2 border-[#1E1E1E]
                     drop-shadow-md drop-shadow-black
                     `}>
@@ -334,7 +334,7 @@ export default function DictionaryPage() {
                             flex flex-col justify-between
                             min-h-80
                             bg-white/50
-                            backdrop-blur-sm
+                            
                             p-4
                             rounded-[40px_15px_40px_15px]
                             border-2 border-[#1E1E1E]
@@ -448,7 +448,7 @@ export default function DictionaryPage() {
                             w-80 h-80
                             bg-white/50
                             rounded-[40px_15px_40px_15px]
-                            backdrop-blur-sm
+                            
                             border-2 border-[#1E1E1E]
                             drop-shadow-md drop-shadow-black
                         `}>
